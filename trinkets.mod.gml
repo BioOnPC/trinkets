@@ -117,27 +117,29 @@
 							
 							 // Secret IceFlower:
 							with(_nearest){
-								nearwep = instance_create(x + xoff, y + yoff, IceFlower);
-								with(nearwep){
-									name         = _nearest.text;
-									x            = xstart;
-									y            = ystart;
-									xprevious    = x;
-									yprevious    = y;
-									visible      = false;
-									mask_index   = mskNone;
-									sprite_index = mskNone;
-									spr_idle     = mskNone;
-									spr_walk     = mskNone;
-									spr_hurt     = mskNone;
-									spr_dead     = mskNone;
-									spr_shadow   = -1;
-									snd_hurt     = -1;
-									snd_dead     = -1;
-									size         = 0;
-									team         = 0;
-									my_health    = 99999;
-									nexthurt     = current_frame + 99999;
+								if(!instance_exists(nearwep)) {
+									nearwep = instance_create(x + xoff, y + yoff, IceFlower);
+									with(nearwep){
+										name         = _nearest.text;
+										x            = xstart;
+										y            = ystart;
+										xprevious    = x;
+										yprevious    = y;
+										visible      = false;
+										mask_index   = mskNone;
+										sprite_index = mskNone;
+										spr_idle     = mskNone;
+										spr_walk     = mskNone;
+										spr_hurt     = mskNone;
+										spr_dead     = mskNone;
+										spr_shadow   = -1;
+										snd_hurt     = -1;
+										snd_dead     = -1;
+										size         = 0;
+										team         = 0;
+										my_health    = 99999;
+										nexthurt     = current_frame + 99999;
+									}
 								}
 								with(_id){
 									nearwep = _nearest.nearwep;
@@ -193,6 +195,7 @@
 		noinput = 0;
 		
 		// Visuals:
+		depth        = -1;
 		mask_index   = mskWepPickup;
 		image_speed  = 0.4;
 		image_alpha  = -1;
@@ -229,6 +232,10 @@
 			if("trinket_list" in self and "trinket_max" in self) if(array_length(trinket_list) = trinket_max) {
 				with(trinket_create(x, y, trinket_list[0][0], trinket_list[0][1])) {
 					noinput = 1;
+				}
+				
+				with(instance_create(x, y + 6, RabbitPaw)) {
+					image_yscale = 0.6;
 				}
 			}
 			
