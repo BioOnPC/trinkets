@@ -261,9 +261,9 @@
 
 
 //#region TRINKET SCRIPTS
-#define trinket_get(_trinket)
+#define trinket_get(_player, _trinket)
 	/*
-		Called from a Player object. Returns whether the Player holds the given trinket. If the trinket has been scaled up, or if the Player holds multiple of the
+		Returns whether the chosen Player holds the given trinket. If the trinket has been scaled up, or if the Player holds multiple of the
 		same trinket, it instead returns the combined scale of the given trinket.
 		
 		Ex:
@@ -272,8 +272,10 @@
 
 	var _s = 0;
 	
-	if("trinket_list" in self) with(trinket_list) {
-		if(self[0] = _trinket) _s += self[1];
+	with(_player) {
+		if("trinket_list" in self) with(trinket_list) {
+			if(self[0] = _trinket) _s += self[1];
+		}
 	}
 	
 	return _s;
