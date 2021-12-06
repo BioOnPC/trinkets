@@ -14,6 +14,7 @@
     
     global.trinket_step     = script_bind_step(trinket_step, 0);
     global.prompt_collision = script_bind_step(prompt_collision, 0);
+    global.level_loading    = false;
 
 	if(fork()) { // Make sure it captures sample trinkets, if loaded
 		wait 0;
@@ -22,7 +23,7 @@
 		exit;
 	}
 
-#macro TRINKET_SCRIPTS															["step", "take", "lose", "destroy"]
+#macro TRINKET_SCRIPTS															["step", "enter", "take", "lose", "destroy"]
 #macro TRINKETS 																global.trinkets
 
 #define chat_command
@@ -38,14 +39,30 @@
 #define game_start
 	trinkets_find();
 
+#define level_start
+	with(instances_matching_ne(Player, "trinket_list", null)) {
+		if(array_length(trinket_list)) for(var i = 0; i < array_length(trinket_list); i++) {
+			script_ref_call([trinket_get_type(trinket_list[i][0]), trinket_get_mod(trinket_list[i][0]), `${trinket_list[i][0]}_level_start`]);
+		}
+	}
+
 #define step
 	if(!instance_exists(global.trinket_step))     global.trinket_step = script_bind_step(trinket_step, 0);
 	if(!instance_exists(global.prompt_collision)) global.prompt_collision = script_bind_step(prompt_collision, 0);
+	
+	 // Thanks Golden Epsilon! //
+	if(instance_exists(GenCont) || instance_exists(Menu)){
+		global.level_loading = true;
+	}
+	else if(global.level_loading){
+		global.level_loading = false;
+		level_start();
+	}
 
 #define trinket_step
 	with(instances_matching_ne(Player, "trinket_list", null)) {
-		if(array_length(trinket_list)) with(trinket_list) {
-			script_ref_call([trinket_get_type(self[0]), trinket_get_mod(self[0]), `${self[0]}_step`]);
+		if(array_length(trinket_list)) for(var i = 0; i < array_length(trinket_list); i++) {
+			script_ref_call([trinket_get_type(trinket_list[i][0]), trinket_get_mod(trinket_list[i][0]), `${trinket_list[i][0]}_step`]);
 		}
 	}
 
@@ -263,16 +280,17 @@
 //#region TRINKET SCRIPTS
 #define trinket_get(_player, _trinket)
 	/*
-		Returns whether the chosen Player holds the given trinket. If the trinket has been scaled up, or if the Player holds multiple of the
-		same trinket, it instead returns the combined scale of the given trinket.
+		Returns whether the chosen Player (or any player, if -1 is given instead of an object index) holds the given trinket. If the trinket 
+		has been scaled up, or if the Player holds multiple of the same trinket, it instead returns the combined scale of the given trinket.
 		
 		Ex:
-			trinket_get("Cigarettes");
+			trinket_get(self, "Cigarettes");
 	*/
 
-	var _s = 0;
+	var _s = 0,
+		_p = _player = -1 ? Player : _player;
 	
-	with(_player) {
+	with(_p) {
 		if("trinket_list" in self) with(trinket_list) {
 			if(self[0] = _trinket) _s += self[1];
 		}
