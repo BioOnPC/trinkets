@@ -5,14 +5,19 @@
         /* TRINKETS */
         AmmunitionBox                                                           = sprite_add("sprites/sprAmmunitionBox.png", 1, 10, 10);
         BanditRags                                                              = sprite_add("sprites/sprBanditRags.png", 1, 10, 10);
+        Bandolier                                                               = sprite_add("sprites/sprBandolier.png", 1, 10, 10);
+        Battery                                                                 = sprite_add("sprites/sprBattery.png", 1, 10, 10);
         Blindfold                                                               = sprite_add("sprites/sprBlindfold.png", 1, 10, 10);
         FirstAidKit                                                             = sprite_add("sprites/sprFirstAidKit.png", 1, 10, 10);
+        GasCan                                                                  = sprite_add("sprites/sprGasCan.png", 1, 10, 10);
         Glasses                                                                 = sprite_add("sprites/sprGlasses.png", 1, 10, 10);
+        Magazine                                                                = sprite_add("sprites/sprMagazine.png", 1, 10, 10);
+        Quiver                                                                  = sprite_add("sprites/sprQuiver.png", 1, 10, 10);
         RoseBud                                                                 = sprite_add("sprites/sprRoseBud.png", 1, 10, 10);
     }
 
 #define trinket_names
-    return ["AmmunitionBox", "BanditRags", "Blindfold", "FirstAidKit", "Glasses", "RoseBud"];
+    return ["AmmunitionBox", "BanditRags", "Bandolier", "Battery", "Blindfold", "FirstAidKit", "GasCan", "Glasses", "Magazine", "Quiver", "RoseBud"];
     
 #define AmmunitionBox_name   return "AMMUNITION BOX";                           // Name
 #define AmmunitionBox_text   return "@yAMMO PICKUPS@s LAST LONGER";             // Description
@@ -33,6 +38,26 @@
 #define BanditRags_level_start
     repeat(trinket_get(self, "BanditRags")) instance_create(x, y, Ally);
 
+#define Bandolier_name   return "BANDOLIER";                                    // Name
+#define Bandolier_text   return "GET MORE @ySHOTGUN AMMO@s";                    // Description
+#define Bandolier_area   return 0;                                              // Spawns anywhere
+#define Bandolier_sprite return spr.Bandolier;                                  // Sprite
+#define Bandolier_swap   return sndShotReload;                                  // Swap sound
+#define Bandolier_take(_scale)
+    typ_ammo[2] += 4 * _scale;
+#define Bandolier_lose(_scale)
+    typ_ammo[2] -= 4 * _scale;
+    
+#define Battery_name   return "BATTERY";                                        // Name
+#define Battery_text   return "GET MORE @yENERGY AMMO@s";                       // Description
+#define Battery_area   return 0;                                                // Spawns anywhere
+#define Battery_sprite return spr.Battery;                                      // Sprite
+#define Battery_swap   return sndLightningReload;                               // Swap sound
+#define Battery_take(_scale)
+    typ_ammo[5] += 5 * _scale;
+#define Battery_lose(_scale)
+    typ_ammo[5] -= 5 * _scale;
+
 #define Blindfold_name   return "BLINDFOLD";                                    // Name
 #define Blindfold_text   return "WORSE @wACCURACY@s";                           // Description
 #define Blindfold_area   return 0;                                              // Spawns anywhere
@@ -40,6 +65,7 @@
 #define Blindfold_swap   return sndMoneyPileBreak;                                 // Swap sound
 #define Blindfold_take(_scale)
     accuracy += 0.3 * _scale;
+    trace("test")
 #define Blindfold_lose(_scale)
     accuracy -= 0.3 * _scale;
 
@@ -54,6 +80,16 @@
         alarm0 += 120 + (trinket_get(-1, "FirstAidKit") * 15); // Health pickups last longer
     }
 
+#define GasCan_name   return "GAS CAN";                                         // Name
+#define GasCan_text   return "GET MORE @yEXPLOSIVE AMMO@s";                     // Description
+#define GasCan_area   return 0;                                                 // Spawns anywhere
+#define GasCan_sprite return spr.GasCan;                                        // Sprite
+#define GasCan_swap   return sndSwapFlame;                                      // Swap sound
+#define GasCan_take(_scale)
+    typ_ammo[4] += 3 * _scale;
+#define GasCan_lose(_scale)
+    typ_ammo[4] -= 3 * _scale;
+
 #define Glasses_name   return "GLASSES";                                        // Name
 #define Glasses_text   return "BETTER @wACCURACY@s";                            // Description
 #define Glasses_area   return 0;                                                // Spawns anywhere
@@ -63,6 +99,27 @@
     accuracy -= 0.3 * _scale;
 #define Glasses_lose(_scale)
     accuracy += 0.3 * _scale;
+
+#define Magazine_name   return "MAGAZINE";                                      // Name
+#define Magazine_text   return "GET MORE @yBULLET AMMO@s";                      // Description
+#define Magazine_area   return 0;                                               // Spawns anywhere
+#define Magazine_sprite return spr.Magazine;                                    // Sprite
+#define Magazine_swap   return sndSwapMachinegun;                               // Swap sound
+#define Magazine_take(_scale)
+    typ_ammo[1] += 16 * _scale;
+    trace("test")
+#define Magazine_lose(_scale)
+    typ_ammo[1] -= 16 * _scale;
+    
+#define Quiver_name   return "QUIVER";                                          // Name
+#define Quiver_text   return "GET MORE @yBOLT AMMO@s";                          // Description
+#define Quiver_area   return 0;                                                 // Spawns anywhere
+#define Quiver_sprite return spr.Quiver;                                        // Sprite
+#define Quiver_swap   return sndCrossReload;                                    // Swap sound
+#define Quiver_take(_scale)
+    typ_ammo[3] += 3 * _scale;
+#define Quiver_lose(_scale)
+    typ_ammo[3] -= 3 * _scale;
 
 #define RoseBud_name   return "ROSE BUD";                                       // Name
 #define RoseBud_text   return "START EACH LEVEL WITH AN @wSAPLING@s";           // Description

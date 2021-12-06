@@ -353,9 +353,6 @@
             trinket_list = array_delete(trinket_list, 0);
         }
         
-         // Call the pickup script:
-        script_ref_call([trinket_get_type(_trinket), trinket_get_mod(_trinket), `${_trinket}_take`, _scale]);
-        
          // Add the trinket to your list of available trinkets:
         array_push(trinket_list, [_trinket, _scale]);
     }
@@ -364,6 +361,9 @@
         trinket_list = [[_trinket, _scale]];
         trinket_max  = 1;
     }
+    
+     // Call the pickup script:
+    script_ref_call([trinket_get_type(_trinket), trinket_get_mod(_trinket), `${_trinket}_take`, _scale]);
     
 #define trinkets_find
 	/*
